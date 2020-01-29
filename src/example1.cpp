@@ -636,6 +636,8 @@ class ExampleApplication : public nanogui::Screen {
 
     /* Draw 2 triangles starting at index 0 */
     mShader.drawIndexed(GL_TRIANGLES, 0, 2);
+
+	Screen::drawContents();
   }
 
  private:

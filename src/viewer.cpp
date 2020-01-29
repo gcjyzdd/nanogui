@@ -6,7 +6,8 @@
 
 NAMESPACE_BEGIN(nanogui)
 
-Viewer::Viewer(Widget* parent) : Widget(parent) {
+Viewer::Viewer(Widget* parent)
+  : Widget(parent) {
   mSize = Vector2i(300, 300);
   mShader.init(
       /* An identifying name */
@@ -44,7 +45,7 @@ Viewer::Viewer(Widget* parent) : Widget(parent) {
   mShader.setUniform("intensity", 0.5f);
 }
 
-void Viewer::draw(NVGcontext* ctx) {
+void Viewer::drawContents() {
   // draw models
   auto ssize = this->screen()->size();
   auto psize = this->parent()->size();
@@ -64,9 +65,7 @@ void Viewer::draw(NVGcontext* ctx) {
 
   Matrix4f mvp;
   mvp.setIdentity();
-  mvp.topLeftCorner<3, 3>() =
-      Matrix3f(Eigen::AngleAxisf((float)glfwGetTime(), Vector3f::UnitZ())) *
-      0.25F;
+  mvp.topLeftCorner<3, 3>() = Matrix3f(Eigen::AngleAxisf((float)glfwGetTime(), Vector3f::UnitZ())) * 0.25F;
 
   mvp.row(0) *= (float)mSize.y() / (float)mSize.x();
 
@@ -78,8 +77,6 @@ void Viewer::draw(NVGcontext* ctx) {
   glViewport(0, 0, ssize(0), ssize(1));
   glScissor(0, 0, ssize(0), ssize(1));
   glDisable(GL_SCISSOR_TEST);
-
-  Widget::draw(ctx);
 }
 
 NAMESPACE_END(nanogui)

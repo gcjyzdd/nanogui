@@ -11,7 +11,7 @@ class NANOGUI_EXPORT Viewer : public Widget {
  public:
   Viewer(Widget* parent);
 
-  void draw(NVGcontext* ctx) override;
+  void drawContents() override;
 
  private:
   nanogui::GLShader mShader;
