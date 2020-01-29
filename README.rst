@@ -40,7 +40,7 @@ Metal/GLES/WebAssembly support is available `here
 Example screenshot
 ----------------------------------------------------------------------------------------
 
-.. image:: https://github.com/wjakob/nanogui/raw/master/resources/screenshot.png
+.. image:: ./resources/screenshot.png
    :alt: Screenshot of Example 1.
    :align: center
 
