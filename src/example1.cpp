@@ -33,6 +33,7 @@
 #include <nanogui/textbox.h>
 #include <nanogui/toolbutton.h>
 #include <nanogui/viewer.h>
+#include <nanogui/viewerwindow.h>
 #include <nanogui/vscrollpanel.h>
 #include <nanogui/window.h>
 #include <iostream>
@@ -546,8 +547,11 @@ class ExampleApplication : public nanogui::Screen {
           alphaIntBox->setValue(alpha);
         });
 
-    window = new Viewer(this, "Test gl");
+    window = new ViewerWindow(this, "Test gl");
     window->setPosition(Vector2i(450, 350));
+    window->setLayout(new GroupLayout(0, 0));
+
+    auto viewer = new Viewer(window);
 
     performLayout();
 
