@@ -1,15 +1,15 @@
 
 #pragma once
 
-#include <nanogui/widget.h>
+#include <nanogui/window.h>
 #include <nanogui/glutil.h>
 #include <functional>
 
 NAMESPACE_BEGIN(nanogui)
 
-class NANOGUI_EXPORT Viewer : public Widget {
+class NANOGUI_EXPORT Viewer : public Window {
  public:
-  Viewer(Widget* parent);
+  Viewer(Widget* parent, const std::string& title = "Untitled");
 
   void draw(NVGcontext* ctx) override;
 

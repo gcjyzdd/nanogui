@@ -546,11 +546,8 @@ class ExampleApplication : public nanogui::Screen {
           alphaIntBox->setValue(alpha);
         });
 
-    window = new Window(this, "Test gl");
+    window = new Viewer(this, "Test gl");
     window->setPosition(Vector2i(450, 350));
-    window->setLayout(new GroupLayout());
-
-    auto viewer = new Viewer(window);
 
     performLayout();
 
