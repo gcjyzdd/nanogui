@@ -1,13 +1,12 @@
-#include <nanogui/viewer.h>
-#include <nanogui/window.h>
 #include <nanogui/screen.h>
 #include <nanogui/theme.h>
+#include <nanogui/viewer.h>
+#include <nanogui/window.h>
 #include <cmath>
 
 NAMESPACE_BEGIN(nanogui)
 
-Viewer::Viewer(Widget* parent)
-  : Widget(parent) {
+Viewer::Viewer(Widget* parent) : Widget(parent) {
   mSize = Vector2i(300, 300);
   mShader.init(
       /* An identifying name */
@@ -46,21 +45,40 @@ Viewer::Viewer(Widget* parent)
 }
 
 void Viewer::draw(NVGcontext* ctx) {
-  Widget::draw(ctx);
-  GLint m_viewport[4];
+  /* Draw window */
+  nvgSave(ctx);
+  nvgBeginPath(ctx);
+  nvgRect(ctx, mPos.x(), mPos.y(), mSize.x(), mSize.y());
 
-  glGetIntegerv(GL_VIEWPORT, m_viewport);
+  nvgFillColor(ctx, NVGcolor{0.1F, 0.1F, 0.2F, 0.0F});
+  nvgFill(ctx);
+  nvgRestore(ctx);
+
+  // GLint m_viewport[4];
+  // glGetIntegerv(GL_VIEWPORT, m_viewport);
+
+  auto pos2 = mPos;
+  auto size2 = mSize;
 
   auto pos = this->parent()->position();
   auto size = this->parent()->size();
-  glViewport(pos(0), 960 - pos(1) - size(1), size(0), size(1));
-  // glViewport(1150,127,300,300);
+  glViewport(pos(0) + pos2(0), 768 - pos(1) - pos2(1) - size2(1), size2(0),
+             size2(1));
+  glScissor(pos(0) + pos2(0), 768 - pos(1) - pos2(1) - size2(1), size2(0),
+            size2(1));
+  glEnable(GL_SCISSOR_TEST);
+
+  glClearColor(0.0F, 0.0F, 0.2F, 1.0F);
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
   /* Draw the window contents using OpenGL */
   mShader.bind();
 
   Matrix4f mvp;
   mvp.setIdentity();
-  mvp.topLeftCorner<3, 3>() = Matrix3f(Eigen::AngleAxisf((float)glfwGetTime(), Vector3f::UnitZ())) * 0.25f;
+  mvp.topLeftCorner<3, 3>() =
+      Matrix3f(Eigen::AngleAxisf((float)glfwGetTime(), Vector3f::UnitZ())) *
+      0.25f;
 
   mvp.row(0) *= (float)mSize.y() / (float)mSize.x();
 
@@ -69,7 +87,11 @@ void Viewer::draw(NVGcontext* ctx) {
   /* Draw 2 triangles starting at index 0 */
   mShader.drawIndexed(GL_TRIANGLES, 0, 2);
 
-  glViewport(0, 0, 1280, 960);
+  glViewport(0, 0, 1024, 768);
+  glScissor(0, 0, 1024, 768);
+  glDisable(GL_SCISSOR_TEST);
+
+  Widget::draw(ctx);
 }
 
 NAMESPACE_END(nanogui)

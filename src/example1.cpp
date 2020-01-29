@@ -11,30 +11,30 @@
     BSD-style license that can be found in the LICENSE.txt file.
 */
 
-#include <nanogui/opengl.h>
-#include <nanogui/glutil.h>
-#include <nanogui/screen.h>
-#include <nanogui/window.h>
-#include <nanogui/layout.h>
-#include <nanogui/label.h>
-#include <nanogui/checkbox.h>
 #include <nanogui/button.h>
-#include <nanogui/toolbutton.h>
-#include <nanogui/popupbutton.h>
+#include <nanogui/checkbox.h>
+#include <nanogui/colorpicker.h>
+#include <nanogui/colorwheel.h>
 #include <nanogui/combobox.h>
-#include <nanogui/progressbar.h>
 #include <nanogui/entypo.h>
-#include <nanogui/messagedialog.h>
-#include <nanogui/textbox.h>
-#include <nanogui/slider.h>
+#include <nanogui/glutil.h>
+#include <nanogui/graph.h>
 #include <nanogui/imagepanel.h>
 #include <nanogui/imageview.h>
-#include <nanogui/vscrollpanel.h>
-#include <nanogui/colorwheel.h>
-#include <nanogui/colorpicker.h>
-#include <nanogui/graph.h>
+#include <nanogui/label.h>
+#include <nanogui/layout.h>
+#include <nanogui/messagedialog.h>
+#include <nanogui/opengl.h>
+#include <nanogui/popupbutton.h>
+#include <nanogui/progressbar.h>
+#include <nanogui/screen.h>
+#include <nanogui/slider.h>
 #include <nanogui/tabwidget.h>
+#include <nanogui/textbox.h>
+#include <nanogui/toolbutton.h>
 #include <nanogui/viewer.h>
+#include <nanogui/vscrollpanel.h>
+#include <nanogui/window.h>
 #include <iostream>
 #include <string>
 
@@ -78,17 +78,15 @@ class GLTexture {
   using handleType = std::unique_ptr<uint8_t[], void (*)(void*)>;
   GLTexture() = default;
   GLTexture(const std::string& textureName)
-    : mTextureName(textureName)
-    , mTextureId(0) {}
+      : mTextureName(textureName), mTextureId(0) {}
 
   GLTexture(const std::string& textureName, GLint textureId)
-    : mTextureName(textureName)
-    , mTextureId(textureId) {}
+      : mTextureName(textureName), mTextureId(textureId) {}
 
   GLTexture(const GLTexture& other) = delete;
   GLTexture(GLTexture&& other) noexcept
-    : mTextureName(std::move(other.mTextureName))
-    , mTextureId(other.mTextureId) {
+      : mTextureName(std::move(other.mTextureName)),
+        mTextureId(other.mTextureId) {
     other.mTextureId = 0;
   }
   GLTexture& operator=(const GLTexture& other) = delete;
@@ -101,12 +99,8 @@ class GLTexture {
     if (mTextureId) glDeleteTextures(1, &mTextureId);
   }
 
-  GLuint texture() const {
-    return mTextureId;
-  }
-  const std::string& textureName() const {
-    return mTextureName;
-  }
+  GLuint texture() const { return mTextureId; }
+  const std::string& textureName() const { return mTextureName; }
 
   /**
    *  Load a file in memory and create an OpenGL texture.
@@ -119,8 +113,12 @@ class GLTexture {
     }
     int force_channels = 0;
     int w, h, n;
-    handleType textureData(stbi_load(fileName.c_str(), &w, &h, &n, force_channels), stbi_image_free);
-    if (!textureData) throw std::invalid_argument("Could not load texture data from file " + fileName);
+    handleType textureData(
+        stbi_load(fileName.c_str(), &w, &h, &n, force_channels),
+        stbi_image_free);
+    if (!textureData)
+      throw std::invalid_argument("Could not load texture data from file " +
+                                  fileName);
     glGenTextures(1, &mTextureId);
     glBindTexture(GL_TEXTURE_2D, mTextureId);
     GLint internalFormat;
@@ -147,7 +145,8 @@ class GLTexture {
         format = 0;
         break;
     }
-    glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, w, h, 0, format, GL_UNSIGNED_BYTE, textureData.get());
+    glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, w, h, 0, format,
+                 GL_UNSIGNED_BYTE, textureData.get());
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
@@ -163,7 +162,7 @@ class GLTexture {
 class ExampleApplication : public nanogui::Screen {
  public:
   ExampleApplication()
-    : nanogui::Screen(Eigen::Vector2i(1024, 768), "NanoGUI Test") {
+      : nanogui::Screen(Eigen::Vector2i(1024, 768), "NanoGUI Test") {
     using namespace nanogui;
 
     Window* window = new Window(this, "Button demo");
@@ -189,7 +188,8 @@ class ExampleApplication : public nanogui::Screen {
     new Label(window, "Toggle buttons", "sans-bold");
     b = new Button(window, "Toggle me");
     b->setFlags(Button::ToggleButton);
-    b->setChangeCallback([](bool state) { cout << "Toggle button state: " << state << endl; });
+    b->setChangeCallback(
+        [](bool state) { cout << "Toggle button state: " << state << endl; });
 
     new Label(window, "Radio buttons", "sans-bold");
     b = new Button(window, "Radio button 1");
@@ -199,7 +199,8 @@ class ExampleApplication : public nanogui::Screen {
 
     new Label(window, "A tool palette", "sans-bold");
     Widget* tools = new Widget(window);
-    tools->setLayout(new BoxLayout(Orientation::Horizontal, Alignment::Middle, 0, 6));
+    tools->setLayout(
+        new BoxLayout(Orientation::Horizontal, Alignment::Middle, 0, 6));
 
     b = new ToolButton(tools, ENTYPO_ICON_CLOUD);
     b = new ToolButton(tools, ENTYPO_ICON_CONTROLLER_FAST_FORWARD);
@@ -207,7 +208,8 @@ class ExampleApplication : public nanogui::Screen {
     b = new ToolButton(tools, ENTYPO_ICON_INSTALL);
 
     new Label(window, "Popup buttons", "sans-bold");
-    PopupButton* popupBtn = new PopupButton(window, "Popup", ENTYPO_ICON_EXPORT);
+    PopupButton* popupBtn =
+        new PopupButton(window, "Popup", ENTYPO_ICON_EXPORT);
     Popup* popup = popupBtn->popup();
     popup->setLayout(new GroupLayout());
     new Label(popup, "Arbitrary widgets can be placed here");
@@ -230,22 +232,29 @@ class ExampleApplication : public nanogui::Screen {
 
     new Label(window, "Message dialog", "sans-bold");
     tools = new Widget(window);
-    tools->setLayout(new BoxLayout(Orientation::Horizontal, Alignment::Middle, 0, 6));
+    tools->setLayout(
+        new BoxLayout(Orientation::Horizontal, Alignment::Middle, 0, 6));
     b = new Button(tools, "Info");
     b->setCallback([&] {
-      auto dlg = new MessageDialog(this, MessageDialog::Type::Information, "Title", "This is an information message");
-      dlg->setCallback([](int result) { cout << "Dialog result: " << result << endl; });
+      auto dlg = new MessageDialog(this, MessageDialog::Type::Information,
+                                   "Title", "This is an information message");
+      dlg->setCallback(
+          [](int result) { cout << "Dialog result: " << result << endl; });
     });
     b = new Button(tools, "Warn");
     b->setCallback([&] {
-      auto dlg = new MessageDialog(this, MessageDialog::Type::Warning, "Title", "This is a warning message");
-      dlg->setCallback([](int result) { cout << "Dialog result: " << result << endl; });
+      auto dlg = new MessageDialog(this, MessageDialog::Type::Warning, "Title",
+                                   "This is a warning message");
+      dlg->setCallback(
+          [](int result) { cout << "Dialog result: " << result << endl; });
     });
     b = new Button(tools, "Ask");
     b->setCallback([&] {
       auto dlg =
-          new MessageDialog(this, MessageDialog::Type::Warning, "Title", "This is a question message", "Yes", "No", true);
-      dlg->setCallback([](int result) { cout << "Dialog result: " << result << endl; });
+          new MessageDialog(this, MessageDialog::Type::Warning, "Title",
+                            "This is a question message", "Yes", "No", true);
+      dlg->setCallback(
+          [](int result) { cout << "Dialog result: " << result << endl; });
     });
 
     vector<pair<int, string>> icons = loadImageDirectory(mNVGContext, "icons");
@@ -268,7 +277,8 @@ class ExampleApplication : public nanogui::Screen {
     imageWindow->setPosition(Vector2i(710, 15));
     imageWindow->setLayout(new GroupLayout());
 
-    // Load all of the images by creating a GLTexture object and saving the pixel data.
+    // Load all of the images by creating a GLTexture object and saving the
+    // pixel data.
     for (auto& icon : icons) {
       GLTexture texture(icon.second);
       auto data = texture.load(resourcesFolderPath + icon.second + ".png");
@@ -286,48 +296,65 @@ class ExampleApplication : public nanogui::Screen {
     });
     imageView->setGridThreshold(20);
     imageView->setPixelInfoThreshold(20);
-    imageView->setPixelInfoCallback([this, imageView](const Vector2i& index) -> pair<string, Color> {
-      auto& imageData = mImagesData[mCurrentImage].second;
-      auto& textureSize = imageView->imageSize();
-      string stringData;
-      uint16_t channelSum = 0;
-      for (int i = 0; i != 4; ++i) {
-        auto& channelData = imageData[4 * index.y() * textureSize.x() + 4 * index.x() + i];
-        channelSum += channelData;
-        stringData += (to_string(static_cast<int>(channelData)) + "\n");
-      }
-      float intensity = static_cast<float>(255 - (channelSum / 4)) / 255.0f;
-      float colorScale = intensity > 0.5f ? (intensity + 1) / 2 : intensity / 2;
-      Color textColor = Color(colorScale, 1.0f);
-      return {stringData, textColor};
-    });
+    imageView->setPixelInfoCallback(
+        [this, imageView](const Vector2i& index) -> pair<string, Color> {
+          auto& imageData = mImagesData[mCurrentImage].second;
+          auto& textureSize = imageView->imageSize();
+          string stringData;
+          uint16_t channelSum = 0;
+          for (int i = 0; i != 4; ++i) {
+            auto& channelData =
+                imageData[4 * index.y() * textureSize.x() + 4 * index.x() + i];
+            channelSum += channelData;
+            stringData += (to_string(static_cast<int>(channelData)) + "\n");
+          }
+          float intensity = static_cast<float>(255 - (channelSum / 4)) / 255.0f;
+          float colorScale =
+              intensity > 0.5f ? (intensity + 1) / 2 : intensity / 2;
+          Color textColor = Color(colorScale, 1.0f);
+          return {stringData, textColor};
+        });
 
     new Label(window, "File dialog", "sans-bold");
     tools = new Widget(window);
-    tools->setLayout(new BoxLayout(Orientation::Horizontal, Alignment::Middle, 0, 6));
+    tools->setLayout(
+        new BoxLayout(Orientation::Horizontal, Alignment::Middle, 0, 6));
     b = new Button(tools, "Open");
     b->setCallback([&] {
-      cout << "File dialog result: " << file_dialog({{"png", "Portable Network Graphics"}, {"txt", "Text file"}}, false)
+      cout << "File dialog result: "
+           << file_dialog(
+                  {{"png", "Portable Network Graphics"}, {"txt", "Text file"}},
+                  false)
            << endl;
     });
     b = new Button(tools, "Save");
     b->setCallback([&] {
-      cout << "File dialog result: " << file_dialog({{"png", "Portable Network Graphics"}, {"txt", "Text file"}}, true) << endl;
+      cout << "File dialog result: "
+           << file_dialog(
+                  {{"png", "Portable Network Graphics"}, {"txt", "Text file"}},
+                  true)
+           << endl;
     });
 
     new Label(window, "Combo box", "sans-bold");
-    new ComboBox(window, {"Combo box item 1", "Combo box item 2", "Combo box item 3"});
+    new ComboBox(window,
+                 {"Combo box item 1", "Combo box item 2", "Combo box item 3"});
     new Label(window, "Check box", "sans-bold");
-    CheckBox* cb = new CheckBox(window, "Flag 1", [](bool state) { cout << "Check box 1 state: " << state << endl; });
+    CheckBox* cb = new CheckBox(window, "Flag 1", [](bool state) {
+      cout << "Check box 1 state: " << state << endl;
+    });
     cb->setChecked(true);
-    cb = new CheckBox(window, "Flag 2", [](bool state) { cout << "Check box 2 state: " << state << endl; });
+    cb = new CheckBox(window, "Flag 2", [](bool state) {
+      cout << "Check box 2 state: " << state << endl;
+    });
     new Label(window, "Progress bar", "sans-bold");
     mProgress = new ProgressBar(window);
 
     new Label(window, "Slider and text box", "sans-bold");
 
     Widget* panel = new Widget(window);
-    panel->setLayout(new BoxLayout(Orientation::Horizontal, Alignment::Middle, 0, 20));
+    panel->setLayout(
+        new BoxLayout(Orientation::Horizontal, Alignment::Middle, 0, 20));
 
     Slider* slider = new Slider(panel);
     slider->setValue(0.5f);
@@ -337,8 +364,12 @@ class ExampleApplication : public nanogui::Screen {
     textBox->setFixedSize(Vector2i(60, 25));
     textBox->setValue("50");
     textBox->setUnits("%");
-    slider->setCallback([textBox](float value) { textBox->setValue(std::to_string((int)(value * 100))); });
-    slider->setFinalCallback([&](float value) { cout << "Final slider value: " << (int)(value * 100) << endl; });
+    slider->setCallback([textBox](float value) {
+      textBox->setValue(std::to_string((int)(value * 100)));
+    });
+    slider->setFinalCallback([&](float value) {
+      cout << "Final slider value: " << (int)(value * 100) << endl;
+    });
     textBox->setFixedSize(Vector2i(60, 25));
     textBox->setFontSize(20);
     textBox->setAlignment(TextBox::Alignment::Right);
@@ -367,7 +398,9 @@ class ExampleApplication : public nanogui::Screen {
     graph->setFooter("Iteration 89");
     VectorXf& func = graph->values();
     func.resize(100);
-    for (int i = 0; i < 100; ++i) func[i] = 0.5f * (0.5f * std::sin(i / 10.f) + 0.5f * std::cos(i / 23.f) + 1);
+    for (int i = 0; i < 100; ++i)
+      func[i] =
+          0.5f * (0.5f * std::sin(i / 10.f) + 0.5f * std::cos(i / 23.f) + 1);
 
     // Dummy tab used to represent the last tab button.
     tabWidget->createTab("+");
@@ -388,10 +421,13 @@ class ExampleApplication : public nanogui::Screen {
         VectorXf& funcDyn = graphDyn->values();
         funcDyn.resize(100);
         for (int i = 0; i < 100; ++i)
-          funcDyn[i] = 0.5f * std::abs((0.5f * std::sin(i / 10.f + counter) + 0.5f * std::cos(i / 23.f + 1 + counter)));
+          funcDyn[i] =
+              0.5f * std::abs((0.5f * std::sin(i / 10.f + counter) +
+                               0.5f * std::cos(i / 23.f + 1 + counter)));
         ++counter;
-        // We must invoke perform layout from the screen instance to keep everything in order.
-        // This is essential when creating tabs dynamically.
+        // We must invoke perform layout from the screen instance to keep
+        // everything in order. This is essential when creating tabs
+        // dynamically.
         performLayout();
         // Ensure that the newly added header is visible on screen
         tabWidget->ensureTabVisible(index);
@@ -402,7 +438,8 @@ class ExampleApplication : public nanogui::Screen {
     // A button to go back to the first tab and scroll the window.
     panel = window->add<Widget>();
     panel->add<Label>("Jump to tab: ");
-    panel->setLayout(new BoxLayout(Orientation::Horizontal, Alignment::Middle, 0, 6));
+    panel->setLayout(
+        new BoxLayout(Orientation::Horizontal, Alignment::Middle, 0, 6));
 
     auto ib = panel->add<IntBox<int>>();
     ib->setEditable(true);
@@ -420,7 +457,8 @@ class ExampleApplication : public nanogui::Screen {
 
     window = new Window(this, "Grid of small widgets");
     window->setPosition(Vector2i(425, 300));
-    GridLayout* layout = new GridLayout(Orientation::Horizontal, 2, Alignment::Middle, 15, 5);
+    GridLayout* layout =
+        new GridLayout(Orientation::Horizontal, 2, Alignment::Middle, 15, 5);
     layout->setColAlignment({Alignment::Maximum, Alignment::Fill});
     layout->setSpacing(0, 10);
     window->setLayout(layout);
@@ -469,13 +507,14 @@ class ExampleApplication : public nanogui::Screen {
     auto cp = new ColorPicker(window, {255, 120, 0, 255});
     cp->setFixedSize({100, 20});
     cp->setFinalCallback([](const Color& c) {
-      std::cout << "ColorPicker Final Callback: [" << c.r() << ", " << c.g() << ", " << c.b() << ", " << c.w() << "]"
-                << std::endl;
+      std::cout << "ColorPicker Final Callback: [" << c.r() << ", " << c.g()
+                << ", " << c.b() << ", " << c.w() << "]" << std::endl;
     });
     // setup a fast callback for the color picker widget on a new window
     // for demonstrative purposes
     window = new Window(this, "Color Picker Fast Callback");
-    layout = new GridLayout(Orientation::Horizontal, 2, Alignment::Middle, 15, 5);
+    layout =
+        new GridLayout(Orientation::Horizontal, 2, Alignment::Middle, 15, 5);
     layout->setColAlignment({Alignment::Maximum, Alignment::Fill});
     layout->setSpacing(0, 10);
     window->setLayout(layout);
@@ -493,21 +532,22 @@ class ExampleApplication : public nanogui::Screen {
     blueIntBox->setEditable(false);
     new Label(window, "Alpha: ");
     auto alphaIntBox = new IntBox<int>(window);
-    cp->setCallback([b, redIntBox, blueIntBox, greenIntBox, alphaIntBox](const Color& c) {
-      b->setBackgroundColor(c);
-      b->setTextColor(c.contrastingColor());
-      int red = (int)(c.r() * 255.0f);
-      redIntBox->setValue(red);
-      int green = (int)(c.g() * 255.0f);
-      greenIntBox->setValue(green);
-      int blue = (int)(c.b() * 255.0f);
-      blueIntBox->setValue(blue);
-      int alpha = (int)(c.w() * 255.0f);
-      alphaIntBox->setValue(alpha);
-    });
+    cp->setCallback(
+        [b, redIntBox, blueIntBox, greenIntBox, alphaIntBox](const Color& c) {
+          b->setBackgroundColor(c);
+          b->setTextColor(c.contrastingColor());
+          int red = (int)(c.r() * 255.0f);
+          redIntBox->setValue(red);
+          int green = (int)(c.g() * 255.0f);
+          greenIntBox->setValue(green);
+          int blue = (int)(c.b() * 255.0f);
+          blueIntBox->setValue(blue);
+          int alpha = (int)(c.w() * 255.0f);
+          alphaIntBox->setValue(alpha);
+        });
 
     window = new Window(this, "Test gl");
-    window->setPosition(Vector2i(850, 350));
+    window->setPosition(Vector2i(450, 350));
     window->setLayout(new GroupLayout());
 
     auto viewer = new Viewer(window);
@@ -558,9 +598,7 @@ class ExampleApplication : public nanogui::Screen {
     mShader.setUniform("intensity", 0.5f);
   }
 
-  ~ExampleApplication() {
-    mShader.free();
-  }
+  ~ExampleApplication() { mShader.free(); }
 
   virtual bool keyboardEvent(int key, int scancode, int action, int modifiers) {
     if (Screen::keyboardEvent(key, scancode, action, modifiers)) return true;
@@ -587,7 +625,9 @@ class ExampleApplication : public nanogui::Screen {
 
     Matrix4f mvp;
     mvp.setIdentity();
-    mvp.topLeftCorner<3, 3>() = Matrix3f(Eigen::AngleAxisf((float)glfwGetTime(), Vector3f::UnitZ())) * 0.25f;
+    mvp.topLeftCorner<3, 3>() =
+        Matrix3f(Eigen::AngleAxisf((float)glfwGetTime(), Vector3f::UnitZ())) *
+        0.25f;
 
     mvp.row(0) *= (float)mSize.y() / (float)mSize.x();
 
@@ -619,7 +659,8 @@ int main(int /* argc */, char** /* argv */) {
 
     nanogui::shutdown();
   } catch (const std::runtime_error& e) {
-    std::string error_msg = std::string("Caught a fatal error: ") + std::string(e.what());
+    std::string error_msg =
+        std::string("Caught a fatal error: ") + std::string(e.what());
 #if defined(_WIN32)
     MessageBoxA(nullptr, error_msg.c_str(), NULL, MB_ICONERROR | MB_OK);
 #else
