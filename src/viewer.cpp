@@ -111,11 +111,11 @@ void Viewer::draw(NVGcontext* ctx) {
   nvgRestore(ctx);
   Widget::draw(ctx);
 
-  // GLint m_viewport[4];
-  // glGetIntegerv(GL_VIEWPORT, m_viewport);
+  // draw models
+  auto ssize = this->screen()->size();
 
-  glViewport(mPos(0), 768 - mPos(1) - mSize(1), mSize(0), mSize(1) - hh);
-  glScissor(mPos(0), 768 - mPos(1) - mSize(1), mSize(0), mSize(1) - hh);
+  glViewport(mPos(0), ssize(1) - mPos(1) - mSize(1), mSize(0), mSize(1) - hh);
+  glScissor(mPos(0), ssize(1) - mPos(1) - mSize(1), mSize(0), mSize(1) - hh);
   glEnable(GL_SCISSOR_TEST);
 
   glClearColor(0.0F, 0.0F, 0.2F, 1.0F);
@@ -137,8 +137,8 @@ void Viewer::draw(NVGcontext* ctx) {
   /* Draw 2 triangles starting at index 0 */
   mShader.drawIndexed(GL_TRIANGLES, 0, 2);
 
-  glViewport(0, 0, 1024, 768);
-  glScissor(0, 0, 1024, 768);
+  glViewport(0, 0, ssize(0), ssize(1));
+  glScissor(0, 0, ssize(0), ssize(1));
   glDisable(GL_SCISSOR_TEST);
 }
 
