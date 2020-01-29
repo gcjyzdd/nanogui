@@ -308,7 +308,7 @@ void Screen::initialize(GLFWwindow *window, bool shutdownGLFWOnDestruct) {
     glfwGetWindowSize(mGLFWWindow, &mSize[0], &mSize[1]);
     glfwGetFramebufferSize(mGLFWWindow, &mFBSize[0], &mFBSize[1]);
 
-    mPixelRatio = get_pixel_ratio(window);
+    mPixelRatio = 1.0F;  // get_pixel_ratio(window);
 
 #if defined(_WIN32) || defined(__linux__)
     if (mPixelRatio != 1 && !mFullscreen)
