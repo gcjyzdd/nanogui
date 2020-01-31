@@ -39,6 +39,8 @@
 #include <iostream>
 #include <string>
 
+#include <chrono>
+
 // Includes for the GLTexture class.
 #include <cstdint>
 #include <memory>
@@ -170,6 +172,10 @@ class ExampleApplication : public nanogui::Screen {
     Window* window = new Window(this, "Button demo");
     window->setPosition(Vector2i(15, 15));
     window->setLayout(new GroupLayout());
+
+    mLastTimeStamp = std::chrono::steady_clock::now();
+
+    mLabel = new Label(window, "framerate");
 
     /* No need to store a pointer, the data structure will be automatically
        freed when the parent window is deleted */
@@ -578,6 +584,11 @@ class ExampleApplication : public nanogui::Screen {
     /* Animate the scrollbar */
     mProgress->setValue(std::fmod((float)glfwGetTime() / 10, 1.0f));
 
+    auto t = std::chrono::steady_clock::now();
+    auto fps = 1000.0F / std::chrono::duration_cast<std::chrono::milliseconds>(t - mLastTimeStamp).count();
+    mLabel->setCaption("fps = " + std::to_string(fps));
+    mLastTimeStamp = t;
+
     /* Draw the user interface */
     Screen::draw(ctx);
   }
@@ -602,11 +613,13 @@ class ExampleApplication : public nanogui::Screen {
 
  private:
   nanogui::ProgressBar* mProgress;
+  nanogui::Label* mLabel;
   nanogui::GLShader mShader;
 
   using imagesDataType = vector<pair<GLTexture, GLTexture::handleType>>;
   imagesDataType mImagesData;
   int mCurrentImage;
+  std::chrono::time_point<std::chrono::steady_clock> mLastTimeStamp;
 };
 
 int main(int /* argc */, char** /* argv */) {
