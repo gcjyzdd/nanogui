@@ -6,7 +6,18 @@
 
 NAMESPACE_BEGIN(nanogui)
 
-Viewer::Viewer(Widget* parent) : Widget(parent) {
+Viewer::Viewer(Widget* parent)
+  : Widget(parent) {
+  glEnable(GL_DEPTH_TEST);
+  glEnable(GL_CULL_FACE);
+  glEnable(GL_LINE_SMOOTH);
+  glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
+  glEnable(GL_PROGRAM_POINT_SIZE);
+  glHint(GL_POLYGON_SMOOTH_HINT, GL_NICEST);
+  glEnable(GL_BLEND);
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+  glEnable(GL_MULTISAMPLE);
+
   mSize = Vector2i(300, 300);
   mShader.init(
       /* An identifying name */
@@ -64,9 +75,7 @@ void Viewer::draw(NVGcontext* ctx) {
 
   Matrix4f mvp;
   mvp.setIdentity();
-  mvp.topLeftCorner<3, 3>() =
-      Matrix3f(Eigen::AngleAxisf((float)glfwGetTime(), Vector3f::UnitZ())) *
-      0.25F;
+  mvp.topLeftCorner<3, 3>() = Matrix3f(Eigen::AngleAxisf((float)glfwGetTime(), Vector3f::UnitZ())) * 0.25F;
 
   mvp.row(0) *= (float)mSize.y() / (float)mSize.x();
 
