@@ -630,7 +630,21 @@ int main(int /* argc */, char** /* argv */) {
       nanogui::ref<ExampleApplication> app = new ExampleApplication();
       app->drawAll();
       app->setVisible(true);
-      nanogui::mainloop();
+      // nanogui::mainloop();
+      // Game loop
+      while (!glfwWindowShouldClose(app->glfwWindow())) {
+        // Check if any events have been activated (key pressed, mouse moved etc.) and call corresponding response functions
+        glfwPollEvents();
+
+        glClearColor(0.2f, 0.25f, 0.3f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT);
+
+        // Draw nanogui
+        app->drawContents();
+        app->drawWidgets();
+
+        glfwSwapBuffers(app->glfwWindow());
+      }
     }
 
     nanogui::shutdown();
