@@ -347,10 +347,16 @@ class NANOGUI_EXPORT Widget : public Object {
   /// Restore the state of the widget from the given \ref Serializer instance
   virtual bool load(Serializer& s);
 
-  // Check if the window needs resize
+  /// Check if the window needs resize
   virtual bool checkResize(const Vector2i& p, unsigned int& resizer) const;
-  // Resize the window
-  virtual bool resize(const Vector2i& p, const Vector2i& rel, unsigned int resizer);
+
+  /// Resize the window
+  virtual bool mouseResizzeEvent(const Vector2i& p, const Vector2i& rel, unsigned int resizer);
+
+  /// Check if the window is drag active
+  virtual bool dragActive() const {
+    return false;
+  }
 
  protected:
   /// Free all resources used by the widget and any children

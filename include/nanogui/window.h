@@ -72,7 +72,8 @@ class NANOGUI_EXPORT Window : public Widget {
   // Check if the window needs resize
   virtual bool checkResize(const Vector2i& p, unsigned int& resizer) const override;
   // Resize the window
-  virtual bool resize(const Vector2i& p, const Vector2i& rel, unsigned int resizer) override;
+  virtual bool mouseResizzeEvent(const Vector2i& p, const Vector2i& rel, unsigned int resizer) override;
+  bool dragActive() const override;
 
  protected:
   /// Internal helper function to maintain nested window position values; overridden in \ref Popup

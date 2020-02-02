@@ -244,11 +244,11 @@ bool Widget::checkResize(const Vector2i& p, unsigned int& resizer) const {
 }
 
 // Resize the window
-bool Widget::resize(const Vector2i& p, const Vector2i& rel, unsigned int resizer) {
+bool Widget::mouseResizzeEvent(const Vector2i& p, const Vector2i& rel, unsigned int resizer) {
   bool rst{false};
   for (auto child : mChildren) {
     if (child->visible()) {
-      bool tmp = child->resize(p, rel, resizer);
+      bool tmp = child->mouseResizzeEvent(p, rel, resizer);
       rst = rst ? true : tmp;
     }
   }

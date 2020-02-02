@@ -207,8 +207,26 @@ bool Window::checkResize(const Vector2i& p, unsigned int& resizer) const {
   return resizer != RESIZE_NONE ? true : false;
 }
 
-bool Window::resize(const Vector2i& p, const Vector2i& rel, unsigned int resizer) {
+bool Window::mouseResizzeEvent(const Vector2i& p, const Vector2i& rel, unsigned int /*resizer*/) {
+  if (mResizer & 1) {
+    mPos(0) += rel(0);
+    mSize(0) -= rel(0);
+  }
+  if (mResizer & 0b10) {
+    mSize(0) += rel(0);
+  }
+  if (mResizer & 0b100) {
+    mPos(1) += rel(1);
+    mSize(1) -= rel(1);
+  }
+  if (mResizer & 0b1000) {
+    mSize(1) += rel(1);
+  }
   return true;
+}
+
+bool Window::dragActive() const {
+  return mResizer != RESIZE_NONE ? false : true;
 }
 
 NAMESPACE_END(nanogui)
