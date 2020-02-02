@@ -43,10 +43,7 @@ Vector2i BoxLayout::preferredSize(NVGcontext *ctx, const Widget *widget) const {
     for (auto w : widget->children()) {
         if (!w->visible())
             continue;
-        if (first)
-            first = false;
-        else
-            size[axis1] += mSpacing;
+        if (!first) size[axis1] += mSpacing;
 
         Vector2i ps = w->preferredSize(ctx), fs = w->fixedSize();
         Vector2i targetSize(

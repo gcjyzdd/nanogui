@@ -21,10 +21,26 @@ NAMESPACE_BEGIN(nanogui)
 enum class Cursor;  // do not put a docstring, this is already documented
 
 static const unsigned int RESIZE_NONE = 0U;
-static const unsigned int RESIZE_LEFT = 1;
+static const unsigned int RESIZE_LEFT = 1U;
 static const unsigned int RESIZE_RIGHT = 1 << 1;
 static const unsigned int RESIZE_TOP = 1 << 2;
 static const unsigned int RESIZE_BOTTOM = 1 << 3;
+
+/// Alignment settings
+static const unsigned int HORIZONTAL_ALIGNMENT_NONE = 0U;
+static const unsigned int HORIZONTAL_ALIGNMENT_LEFT = 1U;
+static const unsigned int HORIZONTAL_ALIGNMENT_CENTER = 1 << 1;
+static const unsigned int HORIZONTAL_ALIGNMENT_RIGHT = 1 << 2;
+static const unsigned int VERTICAL_ALIGNMENT_NONE = 0U;
+static const unsigned int VERTICAL_ALIGNMENT_LEFT = 1U;
+static const unsigned int VERTICAL_ALIGNMENT_CENTER = 1 << 1;
+static const unsigned int VERTICAL_ALIGNMENT_RIGHT = 1 << 2;
+
+/// Size policies
+static const unsigned int SIZE_POLICY_FIXED = 0U;
+static const unsigned int SIZE_POLICY_MINIMUM = 1U;
+static const unsigned int SIZE_POLICY_MAXIMUM = 1 << 1;
+static const unsigned int SIZE_POLICY_PREFERRED = 1 << 2;
 
 /**
  * \class Widget widget.h nanogui/widget.h
