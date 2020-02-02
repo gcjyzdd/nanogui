@@ -23,17 +23,40 @@ bool HBoxContainer::addWidget(Widget* child, unsigned int weight) {
 void HBoxContainer::resize() {
   Widget* widget = parent();
   auto pos = widget->position();
-  auto sie = widget->size();
+  auto size = widget->size();
 
   Window* window = dynamic_cast<Window*>(widget);
   if (window && window->modal()) {
-    pos += Vector2i(mLeftPadding + mLeftMargin, window->theme()->mWindowHeaderHeight);
+    pos += Vector2i(0U, window->theme()->mWindowHeaderHeight);
   }
 
-  unsigned int sum = 0;
+  unsigned int zeroWidth = 0;
   for (const auto& item : getItemMap()) {
-    item.first->setPosition(pos);
-    item.first->setSize(pos);
+    if (item.second.horizontalWeight == 0) zeroWidth += item.first->size().x();
+  }
+  unsigned int idx = 0;
+  unsigned int flexWidth = size.x() - zeroWidth;
+  for (const auto& item : getItemMap()) {
+    auto w = item.second.horizontalWeight;
+    if (w == 0) {
+      if (idx == 0) {
+        pos += Vector2i(mLeftMargin + mLeftPadding, mTopMargin);
+        item.first->setPosition(pos);
+      } else {
+        pos += Vector2i(mSpacing, 0);
+        item.first->setPosition(pos);
+        item.first->setSize(Vector2i(flexWidth * w / mWeightSum));
+      }
+    } else {
+      if (idx == 0) {
+        pos += Vector2i(mLeftMargin, mTopMargin);
+        item.first->setPosition(pos);
+      } else {
+        pos += Vector2i(mSpacing, mTopMargin);
+        item.first->setPosition(pos);
+        item.first->setSize(Vector2i(flexWidth * w / mWeightSum));
+      }
+    }
   }
 }
 
