@@ -354,6 +354,10 @@ add_library(nanogui-obj OBJECT
   src/serializer.cpp
 )
 
+if(NANOGUI_SHOW_WIDGET_BOUNDS)
+  target_compile_definitions(nanogui-obj PUBLIC "NANOGUI_SHOW_WIDGET_BOUNDS")
+endif()
+
 # XCode has a serious bug where the XCode project produces an invalid target
 # that will not get linked if it consists only of objects from object libraries,
 # it will not generate any products (executables, libraries). The only work
