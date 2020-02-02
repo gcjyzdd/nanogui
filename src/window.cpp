@@ -157,7 +157,8 @@ bool Window::mouseDragEvent(const Vector2i&, const Vector2i& rel, int button, in
 bool Window::mouseButtonEvent(const Vector2i& p, int button, bool down, int modifiers) {
   if (Widget::mouseButtonEvent(p, button, down, modifiers)) return true;
   if (button == GLFW_MOUSE_BUTTON_1) {
-    mDrag = down && (p.y() - mPos.y()) < mTheme->mWindowHeaderHeight;
+    mResizer = mouseMotionEvent_(p + Vector2i(1, 2));
+    mDrag = down && (p.y() - mPos.y()) < mTheme->mWindowHeaderHeight && mResizer==RESIZE_NONE;
     return true;
   }
   return false;
@@ -186,9 +187,9 @@ bool Window::load(Serializer& s) {
   return true;
 }
 
-bool Window::checkResize(const Vector2i& p, unsigned int& resizer) const {
-  resizer = RESIZE_NONE;
-  const int margin = 2;
+unsigned int Window::mouseMotionEvent_(const Vector2i& p) {
+  auto resizer = RESIZE_NONE;
+  const int margin = 6;
 
   if (std::abs(p(0) - mPos(0)) <= margin) resizer |= RESIZE_LEFT;
   if (std::abs(p(0) - mSize(0) - mPos(0)) <= margin) resizer |= RESIZE_RIGHT;
@@ -204,7 +205,12 @@ bool Window::checkResize(const Vector2i& p, unsigned int& resizer) const {
   else
     mCursor = Cursor::Arrow;
 
-  return resizer != RESIZE_NONE ? true : false;
+  return resizer;
+}
+
+bool Window::mouseMotionEvent(const Vector2i& p, const Vector2i& rel, int button, int modifiers) {
+  if (Widget::mouseMotionEvent(p, rel, button, modifiers)) return true;
+  return mouseMotionEvent_(p) != RESIZE_NONE ? true : false;
 }
 
 bool Window::mouseResizzeEvent(const Vector2i& p, const Vector2i& rel, unsigned int /*resizer*/) {

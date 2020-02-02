@@ -302,7 +302,7 @@ class NANOGUI_EXPORT Widget : public Object {
   /// Check if the widget contains a certain position
   bool contains(const Vector2i& p) const {
     auto d = (p - mPos).array();
-    return checkResize(p, mResizer) || ((d >= 0).all() && (d < mSize.array()).all());
+    return ((d >= 0).all() && (d < mSize.array()).all());
   }
 
   /// Determine the widget located at the given position value (recursive)
@@ -346,9 +346,6 @@ class NANOGUI_EXPORT Widget : public Object {
 
   /// Restore the state of the widget from the given \ref Serializer instance
   virtual bool load(Serializer& s);
-
-  /// Check if the window needs resize
-  virtual bool checkResize(const Vector2i& p, unsigned int& resizer) const;
 
   /// Resize the window
   virtual bool mouseResizzeEvent(const Vector2i& p, const Vector2i& rel, unsigned int resizer);

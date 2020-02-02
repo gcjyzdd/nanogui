@@ -69,8 +69,8 @@ class NANOGUI_EXPORT Window : public Widget {
   virtual void save(Serializer& s) const override;
   virtual bool load(Serializer& s) override;
 
-  // Check if the window needs resize
-  virtual bool checkResize(const Vector2i& p, unsigned int& resizer) const override;
+  bool mouseMotionEvent(const Vector2i& p, const Vector2i& rel, int button, int modifiers) override;
+
   // Resize the window
   virtual bool mouseResizzeEvent(const Vector2i& p, const Vector2i& rel, unsigned int resizer) override;
   bool dragActive() const override;
@@ -84,6 +84,9 @@ class NANOGUI_EXPORT Window : public Widget {
   Widget* mButtonPanel;
   bool mModal;
   bool mDrag;
+
+ private:
+  unsigned int mouseMotionEvent_(const Vector2i& p);
 
  public:
   EIGEN_MAKE_ALIGNED_OPERATOR_NEW

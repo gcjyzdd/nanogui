@@ -236,13 +236,6 @@ bool Widget::load(Serializer& s) {
   return true;
 }
 
-// Check if the window needs resize
-bool Widget::checkResize(const Vector2i& p, unsigned int& resizer) const {
-  (void)p;
-  (void)resizer;
-  return false;
-}
-
 // Resize the window
 bool Widget::mouseResizzeEvent(const Vector2i& p, const Vector2i& rel, unsigned int resizer) {
   bool rst{false};
