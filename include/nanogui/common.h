@@ -31,7 +31,7 @@
 #include <vector>
 
 /* Set to 1 to draw boxes around widgets */
-//#define NANOGUI_SHOW_WIDGET_BOUNDS 1
+// #define NANOGUI_SHOW_WIDGET_BOUNDS 1
 
 #if !defined(NAMESPACE_BEGIN) || defined(DOXYGEN_DOCUMENTATION_BUILD)
 /**
@@ -396,6 +396,7 @@ class CheckBox;
 class ColorWheel;
 class ColorPicker;
 class ComboBox;
+class Container;
 class GLFramebuffer;
 class GLShader;
 class GridLayout;

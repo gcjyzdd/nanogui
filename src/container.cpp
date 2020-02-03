@@ -1,27 +1,37 @@
 #include <nanogui/container.h>
-#include <nanogui/window.h>
-#include <nanogui/theme.h>
 #include <nanogui/opengl.h>
+#include <nanogui/screen.h>
 #include <nanogui/serializer/core.h>
+#include <nanogui/theme.h>
+#include <nanogui/window.h>
 
 NAMESPACE_BEGIN(nanogui)
 
-Container::Container(Widget* parent)
-  : mParent{parent} {}
+WidgetItem::WidgetItem(Widget* widget) : mParent{mParent} {}
 
-HBoxContainer::HBoxContainer(Widget* parent)
-  : Container(parent) {}
+Vector2i WidgetItem::sizeHint() {
+  return mParent->preferredSize(mParent->screen()->nvgContext());
+}
+
+void WidgetItem::setGeometry(const Vector4i& geometry) {
+  mParent->setPosition(Vector2i(geometry(0), geometry(1)));
+  mParent->setSize(Vector2i(geometry(2), geometry(3)));
+}
+
+Vector2i WidgetItem::minimumSize() { return Vector2i(); }
+
+HBoxContainer::HBoxContainer(Widget* parent) : mParent(parent) {}
 
 bool HBoxContainer::addWidget(Widget* child, unsigned int weight) {
-  ContainerItem item;
-  item.horizontalWeight = weight;
-  getItemMap()[child] = item;
-  mWeightSum += weight;
+  // auto item=new ContainerItem();
+  // item.horizontalWeight = weight;
+  // getItemMap()[child] = item;
+  // mWeightSum += weight;
   return true;
 }
 
 void HBoxContainer::resize() {
-  Widget* widget = parent();
+  Widget* widget = this->widget();
   auto pos = widget->position();
   auto size = widget->size();
 
@@ -32,12 +42,12 @@ void HBoxContainer::resize() {
 
   unsigned int zeroWidth = 0;
   for (const auto& item : getItemMap()) {
-    if (item.second.horizontalWeight == 0) zeroWidth += item.first->size().x();
+    if (item.second->horizontalWeight == 0) zeroWidth += item.first->size().x();
   }
   unsigned int idx = 0;
   unsigned int flexWidth = size.x() - zeroWidth;
   for (const auto& item : getItemMap()) {
-    auto w = item.second.horizontalWeight;
+    auto w = item.second->horizontalWeight;
     if (w == 0) {
       if (idx == 0) {
         pos += Vector2i(mLeftMargin + mLeftPadding, mTopMargin);
@@ -60,7 +70,8 @@ void HBoxContainer::resize() {
   }
 }
 
-bool HBoxContainer::mouseResizzeEvent(const Vector2i& p, const Vector2i& rel, unsigned int resizer) {
+bool HBoxContainer::mouseResizzeEvent(const Vector2i& p, const Vector2i& rel,
+                                      unsigned int resizer) {
   return false;
 }
 

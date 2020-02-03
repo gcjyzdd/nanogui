@@ -82,6 +82,13 @@ class NANOGUI_EXPORT Widget : public Object {
     mLayout = layout;
   }
 
+  /// Return the used \ref Container generator
+  Container* container() { return mContainer; }
+  /// Return the used \ref Container generator
+  const Container* container() const { return mContainer.get(); }
+  /// Set the used \ref Container generator
+  void setContainer(Container* container) { mContainer = container; }
+
   /// Return the \ref Theme used to draw this widget
   Theme* theme() {
     return mTheme;
@@ -393,6 +400,7 @@ class NANOGUI_EXPORT Widget : public Object {
   Widget* mParent;
   ref<Theme> mTheme;
   ref<Layout> mLayout;
+  ref<Container> mContainer;
   std::string mId;
   Vector2i mPos, mSize, mFixedSize;
   std::vector<Widget*> mChildren;
