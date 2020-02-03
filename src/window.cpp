@@ -15,7 +15,7 @@
 #include <nanogui/screen.h>
 #include <nanogui/layout.h>
 #include <nanogui/serializer/core.h>
-
+#include <nanogui/container.h>
 NAMESPACE_BEGIN(nanogui)
 
 Window::Window(Widget* parent, const std::string& title)
@@ -228,6 +228,7 @@ bool Window::mouseResizzeEvent(const Vector2i& p, const Vector2i& rel, unsigned 
   if (mResizer & 0b1000) {
     mSize(1) += rel(1);
   }
+  if (mContainer) mContainer->resize();
   return true;
 }
 

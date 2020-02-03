@@ -7,7 +7,8 @@
 
 NAMESPACE_BEGIN(nanogui)
 
-WidgetItem::WidgetItem(Widget* widget) : mParent{mParent} {}
+WidgetItem::WidgetItem(Widget* widget)
+  : mParent{mParent} {}
 
 Vector2i WidgetItem::sizeHint() {
   return mParent->preferredSize(mParent->screen()->nvgContext());
@@ -18,9 +19,12 @@ void WidgetItem::setGeometry(const Vector4i& geometry) {
   mParent->setSize(Vector2i(geometry(2), geometry(3)));
 }
 
-Vector2i WidgetItem::minimumSize() { return Vector2i(); }
+Vector2i WidgetItem::minimumSize() {
+  return Vector2i();
+}
 
-HBoxContainer::HBoxContainer(Widget* parent) : mParent(parent) {}
+HBoxContainer::HBoxContainer(Widget* parent)
+  : mParent(parent) {}
 
 bool HBoxContainer::addWidget(Widget* child, unsigned int weight) {
   // auto item=new ContainerItem();
@@ -70,8 +74,7 @@ void HBoxContainer::resize() {
   }
 }
 
-bool HBoxContainer::mouseResizzeEvent(const Vector2i& p, const Vector2i& rel,
-                                      unsigned int resizer) {
+bool HBoxContainer::mouseResizzeEvent(const Vector2i& p, const Vector2i& rel, unsigned int resizer) {
   return false;
 }
 
