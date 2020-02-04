@@ -59,7 +59,7 @@ void Viewer::draw(NVGcontext* ctx) {
   // draw models
   auto ssize = this->screen()->size();
   auto psize = this->parent()->size();
-  auto ppos = this->parent()->position();
+  auto ppos = this->parent()->absolutePosition();
 
   Vector2i viewPos = ppos + mPos;
   viewPos = Vector2i(viewPos(0), ssize(1) - viewPos(1) - mSize(1));

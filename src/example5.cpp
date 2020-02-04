@@ -175,7 +175,7 @@ class ExampleApplication : public nanogui::Screen {
     window->setSize(Vector2i(420, 400));
 
     HBoxContainer* hbox = new HBoxContainer(window);
-    auto viewer = new Viewer(window);
+    Viewer* viewer = new Viewer(window);
     hbox->addWidget(viewer);
 
     window->setContainer(hbox);

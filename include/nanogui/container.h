@@ -16,10 +16,14 @@ class ContainerItem : public Object {
  public:
   virtual Vector2i sizeHint() = 0;
   virtual void setGeometry(const Vector4i& geometry) = 0;
+  /// If this item is a Widget, it is returned as a Widget; otherwise 0 is returned.
   virtual Widget* widget() = 0;
+  /// Implemented in subclasses to return whether this item is empty, i.e. whether it contains any widgets.
   virtual bool isEmpty() const = 0;
+  /// If this item is a Container, it is returned as a Container; otherwise 0 is returned.
   virtual Container* container() = 0;
   virtual Vector2i minimumSize() = 0;
+  /// If this item is a SpacerItem, it is returned as a SpacerItem; otherwise 0 is returned.
   virtual SpacerItem* spacerItem() = 0;
 
  public:
@@ -45,9 +49,7 @@ class NANOGUI_EXPORT Container : public ContainerItem {
 
   // Vector2i sizeHint() override;
   // void setGeometry(const Vector4i& geometry) ;
-  Widget* widget() override {
-    return mParent;
-  }
+
   bool isEmpty() const override {
     return mItemMap.size() != 0U;
   }
@@ -87,7 +89,6 @@ class NANOGUI_EXPORT Container : public ContainerItem {
   }
 
  private:
-  ref<Widget> mParent;
   std::unordered_map<Widget*, ContainerItem*> mItemMap;
 };
 
@@ -119,6 +120,10 @@ class NANOGUI_EXPORT HBoxContainer : public Container {
  public:
   HBoxContainer(Widget* parent);
 
+  Widget* widget() override {
+    return mParent;
+  }
+
   Vector2i sizeHint() override {
     return Vector2i();
   }
@@ -136,7 +141,7 @@ class NANOGUI_EXPORT HBoxContainer : public Container {
   void resize() override;
 
  private:
-  std::unordered_map<ContainerItem*, unsigned int> mWeights;
+  std::unordered_map<ContainerItem*, unsigned int> mItems;
   ref<Widget> mParent;
   unsigned int mWeightSum{0U};
 

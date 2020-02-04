@@ -24,7 +24,9 @@ Widget::Widget(Widget* parent)
   , mTheme(nullptr)
   , mLayout(nullptr)
   , mPos(Vector2i::Zero())
+  , mContentPos(Vector2i::Zero())
   , mSize(Vector2i::Zero())
+  , mContentSize(Vector2i::Zero())
   , mFixedSize(Vector2i::Zero())
   , mVisible(true)
   , mEnabled(true)
@@ -75,7 +77,7 @@ void Widget::performLayout(NVGcontext* ctx) {
 Widget* Widget::findWidget(const Vector2i& p) {
   for (auto it = mChildren.rbegin(); it != mChildren.rend(); ++it) {
     Widget* child = *it;
-    if (child->visible() && child->contains(p - mPos)) return child->findWidget(p - mPos);
+    if (child->visible() && child->contains(p - mContentPos)) return child->findWidget(p - mContentPos);
   }
   return contains(p) ? this : nullptr;
 }
@@ -83,7 +85,8 @@ Widget* Widget::findWidget(const Vector2i& p) {
 bool Widget::mouseButtonEvent(const Vector2i& p, int button, bool down, int modifiers) {
   for (auto it = mChildren.rbegin(); it != mChildren.rend(); ++it) {
     Widget* child = *it;
-    if (child->visible() && child->contains(p - mPos) && child->mouseButtonEvent(p - mPos, button, down, modifiers))
+    if (child->visible() && child->contains(p - mContentPos) &&
+        child->mouseButtonEvent(p - mContentPos, button, down, modifiers))
       return true;
   }
   if (button == GLFW_MOUSE_BUTTON_1 && down && !mFocused) requestFocus();

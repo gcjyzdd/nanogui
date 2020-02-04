@@ -38,8 +38,14 @@ Vector2i Window::preferredSize(NVGcontext* ctx) const {
   return result.cwiseMax(Vector2i(bounds[2] - bounds[0] + 20, bounds[3] - bounds[1]));
 }
 
-Vector4i Window::contentRec() {
-  return Vector4i(mPos(0), mPos(1) + mTheme->mWindowHeaderHeight, mSize(0), mSize(1) - mTheme->mWindowHeaderHeight);
+void Window::setPosition(const Vector2i& pos) {
+  mPos = pos;
+  mContentPos = Vector2i(mPos(0), mPos(1) + mTheme->mWindowHeaderHeight);
+}
+
+void Window::setSize(const Vector2i& size) {
+  mSize = size;
+  mContentSize = Vector2i(mSize(0), mSize(1) - mTheme->mWindowHeaderHeight);
 }
 
 Widget* Window::buttonPanel() {
@@ -153,6 +159,7 @@ bool Window::mouseDragEvent(const Vector2i&, const Vector2i& rel, int button, in
     mPos += rel;
     mPos = mPos.cwiseMax(Vector2i::Zero());
     mPos = mPos.cwiseMin(parent()->size() - mSize);
+    setPosition(mPos);
     return true;
   }
   return false;
@@ -232,6 +239,8 @@ bool Window::mouseResizzeEvent(const Vector2i& p, const Vector2i& rel, unsigned 
   if (mResizer & 0b1000) {
     mSize(1) += rel(1);
   }
+  setPosition(mPos);
+  setSize(mSize);
   if (mContainer) mContainer->resize();
   return true;
 }

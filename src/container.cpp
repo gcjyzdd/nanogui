@@ -8,7 +8,7 @@
 NAMESPACE_BEGIN(nanogui)
 
 WidgetItem::WidgetItem(Widget* widget)
-  : mWidget{mWidget} {}
+  : mWidget(widget) {}
 
 Vector2i WidgetItem::sizeHint() {
   return mWidget->preferredSize(mWidget->screen()->nvgContext());
@@ -29,7 +29,7 @@ HBoxContainer::HBoxContainer(Widget* parent)
 bool HBoxContainer::addWidget(Widget* child, unsigned int weight) {
   auto item = new WidgetItem(child);
   item->horizontalWeight = weight;
-  mWeights[item] = weight;
+  mItems[item] = weight;
   mWeightSum += weight;
 
   resize();
@@ -38,42 +38,45 @@ bool HBoxContainer::addWidget(Widget* child, unsigned int weight) {
 
 void HBoxContainer::resize() {
   Widget* widget = this->widget();
-  auto pos = widget->position();
-  auto size = widget->size();
+  auto contentRec = widget->contentRec();
 
-  Window* window = dynamic_cast<Window*>(widget);
-  if (window && window->modal()) {
-    pos += Vector2i(0U, window->theme()->mWindowHeaderHeight);
+  if (mItems.size() == 1U) {
+    mItems.begin()->first->setGeometry(Vector4i(0, 0, contentRec(2), contentRec(3)));
   }
-
-  unsigned int zeroWidth = 0;
-  for (const auto& item : getItemMap()) {
-    if (item.second->horizontalWeight == 0) zeroWidth += item.first->size().x();
-  }
-  unsigned int idx = 0;
-  unsigned int flexWidth = size.x() - zeroWidth;
-  for (const auto& item : getItemMap()) {
-    auto w = item.second->horizontalWeight;
-    if (w == 0) {
-      if (idx == 0) {
-        pos += Vector2i(mLeftMargin + mLeftPadding, mTopMargin);
-        item.first->setPosition(pos);
-      } else {
-        pos += Vector2i(mSpacing, 0);
-        item.first->setPosition(pos);
-        item.first->setSize(Vector2i(flexWidth * w / mWeightSum));
-      }
-    } else {
-      if (idx == 0) {
-        pos += Vector2i(mLeftMargin, mTopMargin);
-        item.first->setPosition(pos);
-      } else {
-        pos += Vector2i(mSpacing, mTopMargin);
-        item.first->setPosition(pos);
-        item.first->setSize(Vector2i(flexWidth * w / mWeightSum));
-      }
+  /*
+    Window* window = dynamic_cast<Window*>(widget);
+    if (window && window->modal()) {
+      pos += Vector2i(0U, window->theme()->mWindowHeaderHeight);
     }
-  }
+
+    unsigned int zeroWidth = 0;
+    for (const auto& item : getItemMap()) {
+      if (item.second->horizontalWeight == 0) zeroWidth += item.first->size().x();
+    }
+    unsigned int idx = 0;
+    unsigned int flexWidth = size.x() - zeroWidth;
+    for (const auto& item : getItemMap()) {
+      auto w = item.second->horizontalWeight;
+      if (w == 0) {
+        if (idx == 0) {
+          pos += Vector2i(mLeftMargin + mLeftPadding, mTopMargin);
+          item.first->setPosition(pos);
+        } else {
+          pos += Vector2i(mSpacing, 0);
+          item.first->setPosition(pos);
+          item.first->setSize(Vector2i(flexWidth * w / mWeightSum));
+        }
+      } else {
+        if (idx == 0) {
+          pos += Vector2i(mLeftMargin, mTopMargin);
+          item.first->setPosition(pos);
+        } else {
+          pos += Vector2i(mSpacing, mTopMargin);
+          item.first->setPosition(pos);
+          item.first->setSize(Vector2i(flexWidth * w / mWeightSum));
+        }
+      }
+    }*/
 }
 
 bool HBoxContainer::mouseResizzeEvent(const Vector2i& p, const Vector2i& rel, unsigned int resizer) {

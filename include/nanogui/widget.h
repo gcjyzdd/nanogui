@@ -94,9 +94,9 @@ class NANOGUI_EXPORT Widget : public Object {
   void setContainer(Container* container) {
     mContainer = container;
   }
-
-  virtual Vector4i contentRec() {
-    return Vector4i(mPos(0), mPos(1), mSize(0), mSize(1));
+  /// Compute the content rectangle
+  Vector4i contentRec() {
+    return Vector4i(mContentPos(0), mContentPos(1), mContentSize(0), mContentSize(1));
   }
 
   /// Return the \ref Theme used to draw this widget
@@ -110,18 +110,23 @@ class NANOGUI_EXPORT Widget : public Object {
   /// Set the \ref Theme used to draw this widget
   virtual void setTheme(Theme* theme);
 
+  /// Get the geometry
+  const Vector4i geometry() const {
+    return Vector4i(mPos.x(), mPos.y(), mSize.x(), mSize.y());
+  }
   /// Return the position relative to the parent widget
   const Vector2i& position() const {
     return mPos;
   }
   /// Set the position relative to the parent widget
-  void setPosition(const Vector2i& pos) {
+  virtual void setPosition(const Vector2i& pos) {
     mPos = pos;
+    mContentPos = pos;
   }
 
   /// Return the absolute position on screen
   Vector2i absolutePosition() const {
-    return mParent ? (parent()->absolutePosition() + mPos) : mPos;
+    return mParent ? (parent()->absolutePosition() + mContentPos) : mContentPos;
   }
 
   /// Return the size of the widget
@@ -129,8 +134,9 @@ class NANOGUI_EXPORT Widget : public Object {
     return mSize;
   }
   /// set the size of the widget
-  void setSize(const Vector2i& size) {
+  virtual void setSize(const Vector2i& size) {
     mSize = size;
+    mContentSize = size;
   }
 
   /// Return the width of the widget
@@ -140,6 +146,7 @@ class NANOGUI_EXPORT Widget : public Object {
   /// Set the width of the widget
   void setWidth(int width) {
     mSize.x() = width;
+    mContentSize.x() = width;
   }
 
   /// Return the height of the widget
@@ -149,6 +156,7 @@ class NANOGUI_EXPORT Widget : public Object {
   /// Set the height of the widget
   void setHeight(int height) {
     mSize.y() = height;
+    mContentSize.y() = height;
   }
 
   /**
@@ -413,6 +421,7 @@ class NANOGUI_EXPORT Widget : public Object {
   ref<Container> mContainer;
   std::string mId;
   Vector2i mPos, mSize, mFixedSize;
+  Vector2i mContentPos, mContentSize;
   std::vector<Widget*> mChildren;
 
   /**
