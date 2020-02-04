@@ -97,10 +97,10 @@ class NANOGUI_EXPORT WidgetItem : public ContainerItem {
   Vector2i sizeHint() override;
   void setGeometry(const Vector4i& geometry) override;
   Widget* widget() override {
-    return mParent;
+    return mWidget;
   };
   bool isEmpty() const override {
-    return mParent != nullptr;
+    return mWidget != nullptr;
   }
   Container* container() override {
     return mContainer;
@@ -111,7 +111,7 @@ class NANOGUI_EXPORT WidgetItem : public ContainerItem {
   };
 
  private:
-  ref<Widget> mParent;
+  ref<Widget> mWidget;
   ref<Container> mContainer;
 };
 
@@ -136,7 +136,7 @@ class NANOGUI_EXPORT HBoxContainer : public Container {
   void resize() override;
 
  private:
-  std::unordered_map<Widget*, unsigned int> mWeights;
+  std::unordered_map<ContainerItem*, unsigned int> mWeights;
   ref<Widget> mParent;
   unsigned int mWeightSum{0U};
 

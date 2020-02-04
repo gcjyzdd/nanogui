@@ -38,6 +38,10 @@ Vector2i Window::preferredSize(NVGcontext* ctx) const {
   return result.cwiseMax(Vector2i(bounds[2] - bounds[0] + 20, bounds[3] - bounds[1]));
 }
 
+Vector4i Window::contentRec() {
+  return Vector4i(mPos(0), mPos(1) + mTheme->mWindowHeaderHeight, mSize(0), mSize(1) - mTheme->mWindowHeaderHeight);
+}
+
 Widget* Window::buttonPanel() {
   if (!mButtonPanel) {
     mButtonPanel = new Widget(this);
@@ -158,7 +162,7 @@ bool Window::mouseButtonEvent(const Vector2i& p, int button, bool down, int modi
   if (Widget::mouseButtonEvent(p, button, down, modifiers)) return true;
   if (button == GLFW_MOUSE_BUTTON_1) {
     mResizer = mouseMotionEvent_(p + Vector2i(1, 2));
-    mDrag = down && (p.y() - mPos.y()) < mTheme->mWindowHeaderHeight && mResizer==RESIZE_NONE;
+    mDrag = down && (p.y() - mPos.y()) < mTheme->mWindowHeaderHeight && mResizer == RESIZE_NONE;
     return true;
   }
   return false;

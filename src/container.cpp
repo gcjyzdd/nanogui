@@ -8,15 +8,15 @@
 NAMESPACE_BEGIN(nanogui)
 
 WidgetItem::WidgetItem(Widget* widget)
-  : mParent{mParent} {}
+  : mWidget{mWidget} {}
 
 Vector2i WidgetItem::sizeHint() {
-  return mParent->preferredSize(mParent->screen()->nvgContext());
+  return mWidget->preferredSize(mWidget->screen()->nvgContext());
 }
 
 void WidgetItem::setGeometry(const Vector4i& geometry) {
-  mParent->setPosition(Vector2i(geometry(0), geometry(1)));
-  mParent->setSize(Vector2i(geometry(2), geometry(3)));
+  mWidget->setPosition(Vector2i(geometry(0), geometry(1)));
+  mWidget->setSize(Vector2i(geometry(2), geometry(3)));
 }
 
 Vector2i WidgetItem::minimumSize() {
@@ -27,10 +27,12 @@ HBoxContainer::HBoxContainer(Widget* parent)
   : mParent(parent) {}
 
 bool HBoxContainer::addWidget(Widget* child, unsigned int weight) {
-  // auto item=new ContainerItem();
-  // item.horizontalWeight = weight;
-  // getItemMap()[child] = item;
-  // mWeightSum += weight;
+  auto item = new WidgetItem(child);
+  item->horizontalWeight = weight;
+  mWeights[item] = weight;
+  mWeightSum += weight;
+
+  resize();
   return true;
 }
 

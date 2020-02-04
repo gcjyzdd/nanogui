@@ -83,11 +83,21 @@ class NANOGUI_EXPORT Widget : public Object {
   }
 
   /// Return the used \ref Container generator
-  Container* container() { return mContainer; }
+  Container* container() {
+    return mContainer;
+  }
   /// Return the used \ref Container generator
-  const Container* container() const { return mContainer.get(); }
+  const Container* container() const {
+    return mContainer.get();
+  }
   /// Set the used \ref Container generator
-  void setContainer(Container* container) { mContainer = container; }
+  void setContainer(Container* container) {
+    mContainer = container;
+  }
+
+  virtual Vector4i contentRec() {
+    return Vector4i(mPos(0), mPos(1), mSize(0), mSize(1));
+  }
 
   /// Return the \ref Theme used to draw this widget
   Theme* theme() {

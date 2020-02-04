@@ -172,6 +172,7 @@ class ExampleApplication : public nanogui::Screen {
 
     Window* window = new ViewerWindow(this, "Test gl");
     window->setPosition(Vector2i(450, 350));
+    window->setSize(Vector2i(420, 400));
 
     HBoxContainer* hbox = new HBoxContainer(window);
     auto viewer = new Viewer(window);
@@ -196,9 +197,10 @@ class ExampleApplication : public nanogui::Screen {
     // mProgress->setValue(std::fmod((float)glfwGetTime() / 10, 1.0f));
 
     // auto t = std::chrono::steady_clock::now();
-    // auto fps = 1000.0F / std::chrono::duration_cast<std::chrono::milliseconds>(t - mLastTimeStamp).count();
-    // mLabel->setCaption("fps = " + std::to_string(fps));
-    // mLastTimeStamp = t;
+    // auto fps = 1000.0F /
+    // std::chrono::duration_cast<std::chrono::milliseconds>(t -
+    // mLastTimeStamp).count(); mLabel->setCaption("fps = " +
+    // std::to_string(fps)); mLastTimeStamp = t;
 
     /* Draw the user interface */
     Screen::draw(ctx);

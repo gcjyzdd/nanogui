@@ -64,6 +64,8 @@ class NANOGUI_EXPORT Window : public Widget {
   virtual bool scrollEvent(const Vector2i& p, const Vector2f& rel) override;
   /// Compute the preferred size of the widget
   virtual Vector2i preferredSize(NVGcontext* ctx) const override;
+  /// Compute the content rectangle
+  virtual Vector4i contentRec() override;
   /// Invoke the associated layout generator to properly place child widgets, if any
   virtual void performLayout(NVGcontext* ctx) override;
   virtual void save(Serializer& s) const override;
