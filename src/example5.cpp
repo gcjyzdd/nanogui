@@ -175,8 +175,15 @@ class ExampleApplication : public nanogui::Screen {
     window->setSize(Vector2i(420, 400));
 
     HBoxContainer* hbox = new HBoxContainer(window);
+
+    Button* b = new Button(window, "Plain button");
+    b->setCallback([] { cout << "pushed!" << endl; });
+    b->setTooltip("short tooltip");
+
+    hbox->addWidget(b);
+
     Viewer* viewer = new Viewer(window);
-    hbox->addWidget(viewer);
+    hbox->addWidget(viewer, 1);
 
     window->setContainer(hbox);
   }
