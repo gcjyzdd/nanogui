@@ -16,6 +16,8 @@
 #include <nanogui/layout.h>
 #include <nanogui/serializer/core.h>
 #include <nanogui/container.h>
+#include <nanogui/viewer.h>
+
 NAMESPACE_BEGIN(nanogui)
 
 Window::Window(Widget* parent, const std::string& title)
@@ -82,6 +84,14 @@ void Window::draw(NVGcontext* ctx) {
   nvgBeginPath(ctx);
   nvgRoundedRect(ctx, mPos.x(), mPos.y(), mSize.x(), mSize.y(), cr);
 
+  for (auto& child : mChildren) {
+    auto* viewer = dynamic_cast<Viewer*>(child);
+    if (viewer) {
+      nvgRect(ctx, mContentPos.x() + child->position().x(), mContentPos.y() + child->position().y(), child->size().x(),
+              child->size().y());
+      nvgPathWinding(ctx, NVG_HOLE);
+    }
+  }
   nvgFillColor(ctx, mMouseFocus ? mTheme->mWindowFillFocused : mTheme->mWindowFillUnfocused);
   nvgFill(ctx);
 

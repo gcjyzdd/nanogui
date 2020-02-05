@@ -170,7 +170,7 @@ class ExampleApplication : public nanogui::Screen {
     : nanogui::Screen(Eigen::Vector2i(1024, 768), "NanoGUI Test", true, false, 8, 8, 24, 8, 8) {
     using namespace nanogui;
 
-    Window* window = new ViewerWindow(this, "Test gl");
+    Window* window = new Window(this, "Test gl");//ViewerWindow
     window->setPosition(Vector2i(450, 350));
     window->setSize(Vector2i(420, 400));
 
