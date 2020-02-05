@@ -170,25 +170,29 @@ class ExampleApplication : public nanogui::Screen {
     : nanogui::Screen(Eigen::Vector2i(1024, 768), "NanoGUI Test", true, false, 8, 8, 24, 8, 8) {
     using namespace nanogui;
 
-    Window* window = new Window(this, "Test gl");//ViewerWindow
-    window->setPosition(Vector2i(450, 350));
-    window->setSize(Vector2i(420, 400));
+    Window* window = new Window(this, "Test gl");  // ViewerWindow
+    window->setPosition(Vector2i(50, 50));
+    window->setSize(Vector2i(800, 500));
 
     HBoxContainer* hbox = new HBoxContainer(window);
 
+    VBoxContainer* vbox = new VBoxContainer(window);
+
     mLabel = new Label(window, "framerate");
-    hbox->addWidget(mLabel);
+    vbox->addWidget(mLabel);
 
     Button* b = new Button(window, "Plain button");
     b->setCallback([] { cout << "pushed!" << endl; });
     b->setTooltip("short tooltip");
 
-    hbox->addWidget(b);
+    vbox->addWidget(b);
+
+    hbox->addItem(vbox,1);
 
     Viewer* viewer = new Viewer(window);
-    hbox->addWidget(viewer, 1);
+    hbox->addWidget(viewer, 2);
 
-	b = new Button(window, "Plain button 2");
+    b = new Button(window, "Plain button 2");
     hbox->addWidget(b);
 
     window->setContainer(hbox);

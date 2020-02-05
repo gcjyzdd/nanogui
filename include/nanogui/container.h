@@ -16,7 +16,15 @@ class SpacerItem;
 class ContainerItem : public Object {
  public:
   virtual Vector2i sizeHint() = 0;
-  virtual void setGeometry(const Vector4i& geometry) = 0;
+  virtual void setGeometry(const Vector4i& geometry) {
+    mPos(0) = geometry(0);
+    mPos(1) = geometry(1);
+    mSize(0) = geometry(2);
+    mSize(1) = geometry(3);
+  }
+  Vector4i geometry() const {
+    return Vector4i(mPos(0), mPos(1), mSize(0), mSize(1));
+  }
   /// If this item is a Widget, it is returned as a Widget; otherwise 0 is returned.
   virtual Widget* widget() = 0;
   /// Implemented in subclasses to return whether this item is empty, i.e. whether it contains any widgets.
@@ -26,6 +34,13 @@ class ContainerItem : public Object {
   virtual Vector2i minimumSize() = 0;
   /// If this item is a SpacerItem, it is returned as a SpacerItem; otherwise 0 is returned.
   virtual SpacerItem* spacerItem() = 0;
+  virtual void resize() {}
+  ContainerItem* parent() {
+    return mParentItem;
+  }
+  void setParentItem(ContainerItem* item) {
+    mParentItem = item;
+  }
 
  public:
   /// weights
@@ -37,6 +52,11 @@ class ContainerItem : public Object {
   /// size policy
   unsigned int horizontalSizePolicy{SIZE_POLICY_MINIMUM};
   unsigned int verticalSizePolicy{SIZE_POLICY_FIXED};
+
+ private:
+  ref<ContainerItem> mParentItem;
+  Vector2i mPos;
+  Vector2i mSize;
 };
 
 //
@@ -70,7 +90,7 @@ class NANOGUI_EXPORT Container : public ContainerItem {
     mLeftMargin = mTopMargin = mRightMargin = mBottomMargin = margin;
   }
 
-  virtual void resize() = 0;
+  virtual void addItem(ContainerItem* /*item*/, unsigned int weight = 0){};
 
  public:
   unsigned int mLeftMargin{0U};
@@ -102,7 +122,7 @@ class NANOGUI_EXPORT WidgetItem : public ContainerItem {
     return mWidget;
   };
   bool isEmpty() const override {
-    return mWidget != nullptr;
+    return mWidget == nullptr;
   }
   Container* container() override {
     return mContainer;
@@ -129,7 +149,40 @@ class NANOGUI_EXPORT HBoxContainer : public Container {
     return Vector2i();
   }
 
-  void setGeometry(const Vector4i& geometry) override{};
+  Vector2i minimumSize() override {
+    return Vector2i();
+  }
+
+  bool addWidget(Widget* child, unsigned int weight = 0);
+
+  bool mouseResizzeEvent(const Vector2i& p, const Vector2i& rel, unsigned int resizer);
+
+  void resize() override;
+
+  void addItem(ContainerItem* item, unsigned int weight = 0) override;
+
+ private:
+  std::vector<std::pair<ContainerItem*, unsigned int>> mItems;
+  ref<Widget> mParent;
+  unsigned int mWeightSum{0U};
+
+ public:
+  EIGEN_MAKE_ALIGNED_OPERATOR_NEW
+};
+
+class NANOGUI_EXPORT VBoxContainer : public Container {
+ public:
+  VBoxContainer(Widget* parent);
+
+  Widget* widget() override {
+    return mParent;
+  }
+
+  bool isEmpty() const override {
+    return mItems.size() == 0U;
+  }
+
+  Vector2i sizeHint() override;
 
   Vector2i minimumSize() override {
     return Vector2i();
@@ -140,6 +193,8 @@ class NANOGUI_EXPORT HBoxContainer : public Container {
   bool mouseResizzeEvent(const Vector2i& p, const Vector2i& rel, unsigned int resizer);
 
   void resize() override;
+
+  void addItem(ContainerItem* item, unsigned int weight = 0) override;
 
  private:
   std::vector<std::pair<ContainerItem*, unsigned int>> mItems;
