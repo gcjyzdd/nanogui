@@ -184,10 +184,12 @@ class ExampleApplication : public nanogui::Screen {
     Button* b = new Button(window, "Plain button");
     b->setCallback([] { cout << "pushed!" << endl; });
     b->setTooltip("short tooltip");
-
     vbox->addWidget(b);
 
-    hbox->addItem(vbox,1);
+    mProgress = new ProgressBar(window);
+    vbox->addWidget(mProgress);
+
+    hbox->addItem(vbox, 1);
 
     Viewer* viewer = new Viewer(window);
     hbox->addWidget(viewer, 2);
@@ -211,7 +213,7 @@ class ExampleApplication : public nanogui::Screen {
 
   virtual void draw(NVGcontext* ctx) {
     /* Animate the scrollbar */
-    // mProgress->setValue(std::fmod((float)glfwGetTime() / 10, 1.0f));
+    mProgress->setValue(std::fmod((float)glfwGetTime() / 10, 1.0f));
 
     auto t = std::chrono::steady_clock::now();
     auto fps = 1000.0F / std::chrono::duration_cast<std::chrono::milliseconds>(t - mLastTimeStamp).count();
