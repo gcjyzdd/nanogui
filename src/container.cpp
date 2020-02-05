@@ -42,6 +42,28 @@ void HBoxContainer::resize() {
 
   if (mItems.size() == 1U) {
     mItems.begin()->first->setGeometry(Vector4i(0, 0, contentRec(2), contentRec(3)));
+    return;
+  }
+
+  Vector2i pos(0, 0);
+  unsigned int fixedWidth = 0;
+  for (auto& item : mItems) {
+    if (item.second == 0) fixedWidth += item.first->sizeHint().x();
+  }
+  fixedWidth += mSpacing * (mItems.size() - 1U);
+
+  for (auto& item : mItems) {
+    if (item.second == 0) {
+      // assign allocated space and let the widget itself to place?
+      auto size = item.first->sizeHint();
+      item.first->setGeometry(Vector4i(pos(0), pos(1), size(0), size(1)));
+      pos(0) += size(0) + mSpacing;
+    } else {
+      Vector2i size;
+      size.x() = (contentRec(2) - fixedWidth) * item.second / mWeightSum;
+      size.y() = contentRec(3);
+      item.first->setGeometry(Vector4i(pos(0), pos(1), size(0), size(1)));
+    }
   }
   /*
     Window* window = dynamic_cast<Window*>(widget);

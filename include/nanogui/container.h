@@ -1,6 +1,7 @@
 #pragma once
 
 #include <nanogui/widget.h>
+#include <map>
 #include <unordered_map>
 #include <vector>
 
@@ -141,7 +142,7 @@ class NANOGUI_EXPORT HBoxContainer : public Container {
   void resize() override;
 
  private:
-  std::unordered_map<ContainerItem*, unsigned int> mItems;
+  std::map<ContainerItem*, unsigned int> mItems;
   ref<Widget> mParent;
   unsigned int mWeightSum{0U};
 

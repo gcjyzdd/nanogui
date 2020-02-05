@@ -202,7 +202,7 @@ void Widget::draw(NVGcontext* ctx) {
   if (mChildren.empty()) return;
 
   nvgSave(ctx);
-  nvgTranslate(ctx, mPos.x(), mPos.y());
+  nvgTranslate(ctx, mContentPos.x(), mContentPos.y());
   for (auto child : mChildren) {
     if (child->visible()) {
       nvgSave(ctx);
