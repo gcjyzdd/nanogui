@@ -29,7 +29,8 @@ HBoxContainer::HBoxContainer(Widget* parent)
 bool HBoxContainer::addWidget(Widget* child, unsigned int weight) {
   auto item = new WidgetItem(child);
   item->horizontalWeight = weight;
-  mItems[item] = weight;
+  mItems.push_back(std::make_pair(item, weight));
+
   mWeightSum += weight;
 
   resize();
@@ -63,6 +64,7 @@ void HBoxContainer::resize() {
       size.x() = (contentRec(2) - fixedWidth) * item.second / mWeightSum;
       size.y() = contentRec(3);
       item.first->setGeometry(Vector4i(pos(0), pos(1), size(0), size(1)));
+      pos(0) += size(0) + mSpacing;
     }
   }
   /*

@@ -176,6 +176,9 @@ class ExampleApplication : public nanogui::Screen {
 
     HBoxContainer* hbox = new HBoxContainer(window);
 
+    mLabel = new Label(window, "framerate");
+    hbox->addWidget(mLabel);
+
     Button* b = new Button(window, "Plain button");
     b->setCallback([] { cout << "pushed!" << endl; });
     b->setTooltip("short tooltip");
@@ -184,6 +187,9 @@ class ExampleApplication : public nanogui::Screen {
 
     Viewer* viewer = new Viewer(window);
     hbox->addWidget(viewer, 1);
+
+	b = new Button(window, "Plain button 2");
+    hbox->addWidget(b);
 
     window->setContainer(hbox);
   }
@@ -203,11 +209,10 @@ class ExampleApplication : public nanogui::Screen {
     /* Animate the scrollbar */
     // mProgress->setValue(std::fmod((float)glfwGetTime() / 10, 1.0f));
 
-    // auto t = std::chrono::steady_clock::now();
-    // auto fps = 1000.0F /
-    // std::chrono::duration_cast<std::chrono::milliseconds>(t -
-    // mLastTimeStamp).count(); mLabel->setCaption("fps = " +
-    // std::to_string(fps)); mLastTimeStamp = t;
+    auto t = std::chrono::steady_clock::now();
+    auto fps = 1000.0F / std::chrono::duration_cast<std::chrono::milliseconds>(t - mLastTimeStamp).count();
+    mLabel->setCaption("fps = " + std::to_string(fps));
+    mLastTimeStamp = t;
 
     /* Draw the user interface */
     Screen::draw(ctx);

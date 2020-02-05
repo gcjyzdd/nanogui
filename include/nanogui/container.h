@@ -142,7 +142,7 @@ class NANOGUI_EXPORT HBoxContainer : public Container {
   void resize() override;
 
  private:
-  std::map<ContainerItem*, unsigned int> mItems;
+  std::vector<std::pair<ContainerItem*, unsigned int>> mItems;
   ref<Widget> mParent;
   unsigned int mWeightSum{0U};
 
