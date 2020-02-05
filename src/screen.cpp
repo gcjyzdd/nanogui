@@ -363,7 +363,7 @@ void Screen::drawAll() {
   glfwSwapBuffers(mGLFWWindow);
 }
 
-void Screen::drawWidgets() {
+void Screen::drawContents() {
   if (!mVisible) return;
 
   glfwMakeContextCurrent(mGLFWWindow);
@@ -378,6 +378,16 @@ void Screen::drawWidgets() {
   /* Recompute pixel ratio on OSX */
   if (mSize[0]) mPixelRatio = (float)mFBSize[0] / (float)mSize[0];
 #endif
+
+  glViewport(0, 0, mFBSize[0], mFBSize[1]);
+
+  for (auto* widget : mChildren) {
+    if (widget->visible()) widget->drawContents();
+  }
+}
+
+void Screen::drawWidgets() {
+  if (!mVisible) return;
 
   glViewport(0, 0, mFBSize[0], mFBSize[1]);
   glBindSampler(0, 0);

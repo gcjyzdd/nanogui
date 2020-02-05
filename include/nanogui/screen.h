@@ -108,7 +108,7 @@ public:
     virtual void drawAll();
 
     /// Draw the window contents --- put your OpenGL draw calls here
-    virtual void drawContents() { /* To be overridden */ }
+    virtual void drawContents();
 
     /// Return the ratio between pixel and device coordinates (e.g. >= 2 on Mac Retina displays)
     float pixelRatio() const { return mPixelRatio; }

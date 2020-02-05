@@ -383,7 +383,10 @@ class NANOGUI_EXPORT Widget : public Object {
   virtual void draw(NVGcontext* ctx);
 
   /// Draw the widget contents --- put your OpenGL draw calls here
-  virtual void drawContents() { /* To be overridden */
+  virtual void drawContents() {
+    for (auto* widget : mChildren) {
+      if (widget->visible()) widget->drawContents();
+    }
   }
 
   /// Save the state of the widget into the given \ref Serializer instance

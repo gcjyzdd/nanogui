@@ -55,7 +55,7 @@ Viewer::Viewer(Widget* parent)
   mShader.setUniform("intensity", 0.5f);
 }
 
-void Viewer::draw(NVGcontext* ctx) {
+void Viewer::drawContents() {
   // draw models
   auto ssize = this->screen()->size();
   auto psize = this->parent()->size();
@@ -87,8 +87,6 @@ void Viewer::draw(NVGcontext* ctx) {
   glViewport(0, 0, ssize(0), ssize(1));
   glScissor(0, 0, ssize(0), ssize(1));
   glDisable(GL_SCISSOR_TEST);
-
-  Widget::draw(ctx);
 }
 
 NAMESPACE_END(nanogui)
