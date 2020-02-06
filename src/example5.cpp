@@ -192,7 +192,7 @@ class ExampleApplication : public nanogui::Screen {
     hbox->addItem(vbox, 1);
 
     Viewer* viewer = new Viewer(window);
-    hbox->addWidget(viewer, 2);
+    hbox->addWidget(viewer, 3);
 
     b = new Button(window, "Plain button 2");
     hbox->addWidget(b);

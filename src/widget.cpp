@@ -97,9 +97,9 @@ bool Widget::mouseMotionEvent(const Vector2i& p, const Vector2i& rel, int button
   for (auto it = mChildren.rbegin(); it != mChildren.rend(); ++it) {
     Widget* child = *it;
     if (!child->visible()) continue;
-    bool contained = child->contains(p - mPos), prevContained = child->contains(p - mPos - rel);
+    bool contained = child->contains(p - mContentPos), prevContained = child->contains(p - mContentPos - rel);
     if (contained != prevContained) child->mouseEnterEvent(p, contained);
-    if ((contained || prevContained) && child->mouseMotionEvent(p - mPos, rel, button, modifiers)) return true;
+    if ((contained || prevContained) && child->mouseMotionEvent(p - mContentPos, rel, button, modifiers)) return true;
   }
   return false;
 }
