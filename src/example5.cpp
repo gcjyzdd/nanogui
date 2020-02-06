@@ -35,6 +35,7 @@
 #include <nanogui/toolbutton.h>
 #include <nanogui/viewer.h>
 #include <nanogui/viewerwindow.h>
+#include <nanogui/treeviewitem.h>
 #include <nanogui/vscrollpanel.h>
 #include <nanogui/window.h>
 #include <iostream>
@@ -188,6 +189,9 @@ class ExampleApplication : public nanogui::Screen {
 
     mProgress = new ProgressBar(window);
     vbox->addWidget(mProgress);
+
+    auto* treeitem = new TreeViewItem(window, "Node 1", "sans", ENTYPO_ICON_ADD_USER);
+    vbox->addWidget(treeitem);
 
     hbox->addItem(vbox, 1);
 
