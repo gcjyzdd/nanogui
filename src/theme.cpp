@@ -20,7 +20,7 @@ NAMESPACE_BEGIN(nanogui)
 
 Theme::Theme(NVGcontext *ctx) {
     mStandardFontSize                 = 16;
-    mButtonFontSize                   = 20;
+    mButtonFontSize                   = 15;
     mTextBoxFontSize                  = 20;
     mIconScale                        = 0.77f;
 
