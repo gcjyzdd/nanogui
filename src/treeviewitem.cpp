@@ -45,6 +45,7 @@ Vector2i TreeViewItem::preferredSize(NVGcontext* ctx) const {
     iw = nvgTextBounds(ctx, 0, 0, utf8(mIcon).data(), nullptr, nullptr) + mSize.y() * 0.15f;
     size.x() += iw + mHSpacing;
   }
+  size.y() += 80;
   return size.cast<int>();
 }
 
@@ -99,6 +100,14 @@ void TreeViewItem::draw(NVGcontext* ctx) {
 
   nvgTextAlign(ctx, NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE);
   nvgText(ctx, iconPos.x(), iconPos.y(), mCaption.c_str(), nullptr);
+
+  //if (mChildren.size() > 0) {
+  //  nvgBeginPath(ctx);
+  //  nvgMoveTo(ctx, 35, 86);
+  //  nvgLineTo(ctx,35,100);
+  //  nvgStrokeColor(ctx,nvgRGBA(200,200,200,250));
+  //  nvgStroke(ctx);
+  //}
 }
 
 NAMESPACE_END(nanogui)

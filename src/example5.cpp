@@ -191,6 +191,9 @@ class ExampleApplication : public nanogui::Screen {
     vbox->addWidget(mProgress);
 
     auto* treeitem = new TreeViewItem(window, "Node 1", "sans", ENTYPO_ICON_ADD_USER);
+    auto* treeitem2 = new TreeViewItem(window, "Node 2", "sans", ENTYPO_ICON_ADD_USER);
+    treeitem->addChild(treeitem2);
+
     vbox->addWidget(treeitem);
 
     hbox->addItem(vbox, 1);

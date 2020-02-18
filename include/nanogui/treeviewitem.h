@@ -16,7 +16,11 @@ class NANOGUI_EXPORT TreeViewItem : public Widget {
 
   virtual bool empty() const {
     return false;
-    //return mItems.size() == 0U;
+    // return mItems.size() == 0U;
+  }
+
+  virtual void addChild(TreeViewItem* child) {
+    mChildren.push_back(child);
   }
 
  protected:
