@@ -171,37 +171,58 @@ class ExampleApplication : public nanogui::Screen {
     : nanogui::Screen(Eigen::Vector2i(1024, 768), "NanoGUI Test", true, false, 8, 8, 24, 8, 8) {
     using namespace nanogui;
 
-    Window* window = new Window(this, "Test gl");  // ViewerWindow
+    Window* window = new Window(this);  // ViewerWindow
     window->setPosition(Vector2i(50, 50));
     window->setSize(Vector2i(800, 500));
 
     HBoxContainer* hbox = new HBoxContainer(window);
 
-    VBoxContainer* vbox = new VBoxContainer(window);
+    VBoxContainer* vbox = new VBoxContainer(hbox);
 
-    mLabel = new Label(window, "framerate");
+    mLabel = new Label(vbox, "framerate");
     vbox->addWidget(mLabel);
 
-    Button* b = new Button(window, "Plain button");
+    Button* b = new Button(vbox, "Plain button");
     b->setCallback([] { cout << "pushed!" << endl; });
     b->setTooltip("short tooltip");
     vbox->addWidget(b);
 
-    mProgress = new ProgressBar(window);
+    mProgress = new ProgressBar(vbox);
     vbox->addWidget(mProgress);
 
-    auto* treeitem = new TreeViewItem(window, "Node 1", "sans", ENTYPO_ICON_ADD_USER);
-    auto* treeitem2 = new TreeViewItem(window, "Node 2", "sans", ENTYPO_ICON_ADD_USER);
+    auto* treeitem = new TreeViewItem(vbox, "Node 1", "sans", ENTYPO_ICON_ADD_USER);
+    auto* treeitem2 = new TreeViewItem(vbox, "Node 2", "sans", ENTYPO_ICON_ADD_USER);
     treeitem->addChild(treeitem2);
 
     vbox->addWidget(treeitem);
 
+    auto* hbox2 = new HBoxContainer(vbox);
+
+    Slider* slider = new Slider(hbox2);
+    slider->setValue(0.5f);
+    slider->setFixedWidth(80);
+
+    TextBox* textBox = new TextBox(hbox2);
+    textBox->setFixedSize(Vector2i(60, 25));
+    textBox->setValue("50");
+    textBox->setUnits("%");
+    slider->setCallback([textBox](float value) { textBox->setValue(std::to_string((int)(value * 100))); });
+    slider->setFinalCallback([&](float value) { cout << "Final slider value: " << (int)(value * 100) << endl; });
+    textBox->setFixedSize(Vector2i(60, 25));
+    textBox->setFontSize(20);
+    textBox->setAlignment(TextBox::Alignment::Right);
+
+    hbox2->addWidget(slider, 1U);
+    hbox2->addWidget(textBox);
+
+    vbox->addItem(hbox2);
+
     hbox->addItem(vbox, 1);
 
-    Viewer* viewer = new Viewer(window);
+    Viewer* viewer = new Viewer(hbox);
     hbox->addWidget(viewer, 3);
 
-    b = new Button(window, "Plain button 2");
+    b = new Button(hbox, "Plain button 2");
     hbox->addWidget(b);
 
     window->setContainer(hbox);

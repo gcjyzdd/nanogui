@@ -7,9 +7,16 @@
 
 NAMESPACE_BEGIN(nanogui)
 
+ContainerItem::ContainerItem(Widget* parent)
+  : Widget(parent) {}
+
+Container::Container(Widget* parent)
+  : ContainerItem(parent) {}
+
 WidgetItem::WidgetItem(Widget* widget)
-  : mWidget(widget) {
-  setGeometry(mWidget->contentRec());
+  : ContainerItem(nullptr)
+  , mWidget{widget} {
+  setGeometry(widget->contentRec());
 }
 
 Vector2i WidgetItem::sizeHint() {
@@ -27,8 +34,22 @@ Vector2i WidgetItem::minimumSize() {
 }
 
 HBoxContainer::HBoxContainer(Widget* parent)
-  : mParent(parent) {
+  : Container(parent) {
   setGeometry(mParent->contentRec());
+}
+
+Vector2i HBoxContainer::sizeHint() {
+  Vector2i size(0, 0);
+
+  for (auto& item : mItems) {
+    if (!item.first->isEmpty()) {
+      auto hint = item.first->sizeHint();
+      size.x() += hint.x() + mSpacing;
+      if (size.y() < hint.y()) size.y() = hint.y();
+    }
+  }
+  size.x() -= mSpacing;
+  return size;
 }
 
 bool HBoxContainer::addWidget(Widget* child, unsigned int weight) {
@@ -85,7 +106,7 @@ bool HBoxContainer::mouseResizzeEvent(const Vector2i& p, const Vector2i& rel, un
 }
 
 VBoxContainer::VBoxContainer(Widget* parent)
-  : mParent(parent) {
+  : Container(parent) {
   setGeometry(mParent->contentRec());
 }
 
