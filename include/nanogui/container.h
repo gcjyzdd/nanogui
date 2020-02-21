@@ -78,7 +78,7 @@ class NANOGUI_EXPORT Container : public ContainerItem {
   Container* container() override {
     return this;
   }
-  // Vector2i minimumSize() override;
+   Vector2i minimumSize() override;
   SpacerItem* spacerItem() {
     return nullptr;
   }

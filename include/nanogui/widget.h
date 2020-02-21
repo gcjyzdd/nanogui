@@ -71,10 +71,6 @@ class NANOGUI_EXPORT Widget : public Object {
   const Widget* parent() const {
     return mParent;
   }
-  /// Set the parent widget
-  void setParent(Widget* parent) {
-    mParent = parent;
-  }
 
   /// Return the used \ref Layout generator
   Layout* layout() {
